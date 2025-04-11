@@ -7,10 +7,10 @@ from query_engine import query_index
 def main():
     st.title("RAG System with LLaMA 3")
     
-    # Input field for the document folder (default set to "documents")
+    # Input for the folder containing documents.
     documents_path = st.text_input("Documents Folder Path", value="documents")
     
-    # Button to trigger document indexing
+    # Button to index documents.
     if st.button("Index Documents"):
         with st.spinner("Loading and indexing documents..."):
             docs = load_documents(documents_path)
@@ -20,7 +20,7 @@ def main():
                 build_index(docs)
                 st.success("Documents indexed successfully!")
     
-    # Query input
+    # Query input and result display.
     query = st.text_input("Enter your query")
     if st.button("Get Answer") and query:
         with st.spinner("Querying the index..."):

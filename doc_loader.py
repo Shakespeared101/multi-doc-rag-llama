@@ -10,7 +10,7 @@ def load_documents(folder_path):
     documents = []
     folder = Path(folder_path)
     
-    # Loop through files in folder and process based on file type
+    # Process each file in the directory based on file type.
     for file in folder.glob("*"):
         if file.suffix.lower() == ".pdf":
             documents.extend(PDFReader().load_data(str(file)))
