@@ -1,5 +1,5 @@
 # rag_index.py
-from llama_index import GPTVectorStoreIndex
+from llama_index import VectorStoreIndex
 from llama_index.embeddings import HuggingFaceEmbedding
 
 def build_index(documents, index_path="rag_index"):
@@ -10,8 +10,8 @@ def build_index(documents, index_path="rag_index"):
     # Use a small, efficient sentence-transformer model for embeddings
     embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
     
-    # Build index from documents. The GPTVectorStoreIndex is one option here.
-    index = GPTVectorStoreIndex.from_documents(documents, embed_model=embed_model)
+    # Build index from documents.
+    index = VectorStoreIndex.from_documents(documents, embed_model=embed_model)
     
     # Persist the storage context
     index.storage_context.persist(index_path)

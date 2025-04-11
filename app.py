@@ -7,7 +7,7 @@ from query_engine import query_index
 def main():
     st.title("RAG System with LLaMA 3")
     
-    # Input field for document folder (default set to "documents")
+    # Input field for the document folder (default set to "documents")
     documents_path = st.text_input("Documents Folder Path", value="documents")
     
     # Button to trigger document indexing
