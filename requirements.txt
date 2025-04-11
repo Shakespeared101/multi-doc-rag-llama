@@ -6,3 +6,4 @@ python-pptx
 faiss-cpu
 sentence-transformers
 unstructured
+streamlit
