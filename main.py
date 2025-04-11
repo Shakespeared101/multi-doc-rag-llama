@@ -4,7 +4,7 @@ from rag_index import build_index
 from query_engine import query_index
 
 def main():
-    # Specify the folder that holds your documents.
+    # Specify the folder containing your documents.
     documents_path = "documents"  # Adjust this path as needed.
     
     print("Loading documents...")
