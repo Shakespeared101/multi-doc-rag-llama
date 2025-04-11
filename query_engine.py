@@ -11,10 +11,10 @@ def query_index(query, index_path="rag_index"):
     storage_context = StorageContext.from_defaults(persist_dir=index_path)
     index = load_index_from_storage(storage_context)
     
-    # Configure Ollama LLM with LLaMA 3 (adjust parameters such as base_url if needed)
-    llm = Ollama(model="llama3")  # defaults assumed; customize if required
+    # Configure Ollama LLM with LLaMA 3 (customize parameters as needed)
+    llm = Ollama(model="llama3")
     
-    # Set up query engine; using a tree-summarize response mode to combine info from multiple docs.
+    # Set up query engine; using tree-summarize response mode to combine info from multiple docs.
     query_engine = index.as_query_engine(
         llm=llm,
         similarity_top_k=10,
