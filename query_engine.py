@@ -1,31 +1,12 @@
-# query_engine.py
-from llama_index import StorageContext, load_index_from_storage
+from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.llms.ollama import Ollama
+from llama_index.core import VectorStoreIndex
 
-def query_index(query, index_path="rag_index"):
-    """
-    Loads the index from storage, sets up the query engine with LLaMA 3,
-    and returns the response for a given query.
-    """
-    # Load the persisted index context from disk.
-    storage_context = StorageContext.from_defaults(persist_dir=index_path)
-    index = load_index_from_storage(storage_context)
-    
-    # Configure Ollama LLM with LLaMA 3.
-    llm = Ollama(model="llama3")
-    
-    # Set up the query engine. Here, we choose tree-summarize to combine relevant info.
-    query_engine = index.as_query_engine(
-        llm=llm,
-        similarity_top_k=10,
-        response_mode="tree_summarize"
-    )
-    
-    response = query_engine.query(query)
-    return response
-
-if __name__ == '__main__':
-    # Quick test: prompt user for a query and print the response.
-    user_query = input("Enter your query: ")
-    answer = query_index(user_query)
-    print("\nResponse:\n", answer)
+def query_rag(index: VectorStoreIndex, query: str) -> str:
+    try:
+        llm = Ollama(model="llama3")  # Ensure `ollama run llama3` is active
+        engine = RetrieverQueryEngine.from_args(index.as_retriever(), llm=llm)
+        response = engine.query(query)
+        return str(response)
+    except Exception as e:
+        return f"[Error] Query failed: {e}"

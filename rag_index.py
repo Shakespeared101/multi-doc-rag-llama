@@ -1,28 +1,20 @@
-# rag_index.py
-from llama_index.indices.vector_store import VectorStoreIndex
-from llama_index.embeddings import HuggingFaceEmbedding
+import os
+from llama_index.core import VectorStoreIndex, StorageContext, load_index_from_storage
+from llama_index.core.node_parser import SimpleNodeParser
+from llama_index.core.text_splitter import SentenceSplitter
+from llama_index.core.schema import Document
 
-def build_index(documents, index_path="rag_index"):
-    """
-    Builds a vector index from provided documents and persists it to disk.
-    Returns the built index.
-    """
-    # Use a lightweight Sentence Transformer model for embeddings.
-    embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
-    
-    # Build the index using the documents.
-    index = VectorStoreIndex.from_documents(documents, embed_model=embed_model)
-    
-    # Persist the storage context to disk.
-    index.storage_context.persist(index_path)
-    return index
+PERSIST_DIR = "./storage"
 
-if __name__ == '__main__':
-    # Quick test: load documents and build index.
-    from doc_loader import load_documents
-    docs = load_documents("documents")
-    if docs:
-        build_index(docs)
-        print("Index built and persisted.")
+def build_or_load_index(documents: List[Document]) -> VectorStoreIndex:
+    if os.path.exists(PERSIST_DIR):
+        print("[Info] Loading existing index...")
+        storage_context = StorageContext.from_defaults(persist_dir=PERSIST_DIR)
+        return load_index_from_storage(storage_context)
     else:
-        print("No documents loaded.")
+        print("[Info] Building new index...")
+        parser = SimpleNodeParser(text_splitter=SentenceSplitter(chunk_size=512))
+        nodes = parser.get_nodes_from_documents(documents)
+        index = VectorStoreIndex(nodes)
+        index.storage_context.persist(persist_dir=PERSIST_DIR)
+        return index
