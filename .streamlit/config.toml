@@ -1,0 +1,4 @@
+# Inside .streamlit/config.toml
+[server]
+runOnSave = true
+fileWatcherType = "poll"

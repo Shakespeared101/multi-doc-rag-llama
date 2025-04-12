@@ -1,26 +1,16 @@
-# doc_loader.py
-from pathlib import Path
-from llama_index.readers.file import PDFReader, DocxReader, PptxReader
+import os
+from typing import List
+from llama_index.core import Document
+from unstructured.partition.auto import partition
 
-def load_documents(folder_path):
-    """
-    Loads documents from the given folder path.
-    Returns a list of Document objects.
-    """
-    documents = []
-    folder = Path(folder_path)
-    
-    # Process each file in the directory based on file type.
-    for file in folder.glob("*"):
-        if file.suffix.lower() == ".pdf":
-            documents.extend(PDFReader().load_data(str(file)))
-        elif file.suffix.lower() == ".docx":
-            documents.extend(DocxReader().load_data(str(file)))
-        elif file.suffix.lower() == ".pptx":
-            documents.extend(PptxReader().load_data(str(file)))
-    return documents
-
-if __name__ == '__main__':
-    # Quick test
-    docs = load_documents("documents")
-    print(f"Loaded {len(docs)} documents.")
+def load_documents_from_folder(folder_path: str) -> List[Document]:
+    docs = []
+    for filename in os.listdir(folder_path):
+        filepath = os.path.join(folder_path, filename)
+        try:
+            elements = partition(filename=filepath)
+            text = "\n".join([str(el) for el in elements])
+            docs.append(Document(text=text, metadata={"filename": filename}))
+        except Exception as e:
+            print(f"[Error] Failed to load {filename}: {e}")
+    return docs
