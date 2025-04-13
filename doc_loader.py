@@ -1,24 +1,37 @@
-import os
-from langchain_community.document_loaders import (
-    PyPDFLoader,
-    UnstructuredWordDocumentLoader,
-    UnstructuredPowerPointLoader,
-    TextLoader
+from llama_index.core import SimpleDirectoryReader
+from llama_index.readers.file import (
+    PDFReader,
+    DocxReader,
+    PptxReader,
+    MarkdownReader,
+    HTMLTagReader,
+    EpubReader,
+    CSVReader,
+    RTFReader,
+    ImageReader,
+    IPYNBReader
 )
 
-def load_documents(directory):
-    documents = []
-    for filename in os.listdir(directory):
-        filepath = os.path.join(directory, filename)
-        if filename.endswith(".pdf"):
-            loader = PyPDFLoader(filepath)
-        elif filename.endswith(".docx"):
-            loader = UnstructuredWordDocumentLoader(filepath)
-        elif filename.endswith(".pptx"):
-            loader = UnstructuredPowerPointLoader(filepath)
-        elif filename.endswith(".txt"):
-            loader = TextLoader(filepath)
-        else:
-            continue
-        documents.extend(loader.load())
+def load_documents(directory_path="docs"):
+    file_extractor = {
+        ".pdf": PDFReader(),
+        ".docx": DocxReader(),
+        ".pptx": PptxReader(),
+        ".md": MarkdownReader(),
+        ".html": HTMLTagReader(),
+        ".epub": EpubReader(),
+        ".csv": CSVReader(),
+        ".rtf": RTFReader(),
+        ".png": ImageReader(),
+        ".jpg": ImageReader(),
+        ".jpeg": ImageReader(),
+        ".ipynb": IPYNBReader()
+    }
+
+    reader = SimpleDirectoryReader(
+        input_dir=directory_path,
+        recursive=True,
+        file_extractor=file_extractor
+    )
+    documents = reader.load_data()
     return documents
