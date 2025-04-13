@@ -1,12 +1,11 @@
-from llama_index.core.query_engine import RetrieverQueryEngine
-from llama_index.llms.ollama import Ollama
-from llama_index.core import VectorStoreIndex
+# query_engine.py
 
-def query_rag(index: VectorStoreIndex, query: str) -> str:
-    try:
-        llm = Ollama(model="llama3")  # Ensure `ollama run llama3` is active
-        engine = RetrieverQueryEngine.from_args(index.as_retriever(), llm=llm)
-        response = engine.query(query)
-        return str(response)
-    except Exception as e:
-        return f"[Error] Query failed: {e}"
+from llama_index.core.query_engine import RetrieverQueryEngine
+from llama_index.core.response_synthesizers import CompactAndRefine
+
+def query_rag(index, query):
+    retriever = index.as_retriever()
+    response_synthesizer = CompactAndRefine()
+    engine = RetrieverQueryEngine(retriever=retriever, response_synthesizer=response_synthesizer)
+    response = engine.query(query)
+    return response.response
