@@ -1,16 +1,24 @@
 import os
-from typing import List
-from llama_index.core import Document
-from unstructured.partition.auto import partition
+from langchain_community.document_loaders import (
+    PyPDFLoader,
+    UnstructuredWordDocumentLoader,
+    UnstructuredPowerPointLoader,
+    TextLoader
+)
 
-def load_documents_from_folder(folder_path: str) -> List[Document]:
-    docs = []
-    for filename in os.listdir(folder_path):
-        filepath = os.path.join(folder_path, filename)
-        try:
-            elements = partition(filename=filepath)
-            text = "\n".join([str(el) for el in elements])
-            docs.append(Document(text=text, metadata={"filename": filename}))
-        except Exception as e:
-            print(f"[Error] Failed to load {filename}: {e}")
-    return docs
+def load_documents(directory):
+    documents = []
+    for filename in os.listdir(directory):
+        filepath = os.path.join(directory, filename)
+        if filename.endswith(".pdf"):
+            loader = PyPDFLoader(filepath)
+        elif filename.endswith(".docx"):
+            loader = UnstructuredWordDocumentLoader(filepath)
+        elif filename.endswith(".pptx"):
+            loader = UnstructuredPowerPointLoader(filepath)
+        elif filename.endswith(".txt"):
+            loader = TextLoader(filepath)
+        else:
+            continue
+        documents.extend(loader.load())
+    return documents

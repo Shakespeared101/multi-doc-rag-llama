@@ -14,3 +14,12 @@ pandas
 beautifulsoup4
 pypandoc
 llama-index-llms-ollama
+llama-index
+langchain
+langchain-community
+langchain-huggingface
+sentence-transformers
+ollama
+python-pptx
+python-docx
+PyPDF2
