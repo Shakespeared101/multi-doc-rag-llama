@@ -1,24 +1,16 @@
-# rag_index.py
-
-from langchain_huggingface import HuggingFaceEmbeddings
+import os
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from llama_index.core import VectorStoreIndex, StorageContext, load_index_from_storage
 from llama_index.embeddings.langchain import LangchainEmbedding
-from llama_index.core import Settings
-from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
-from llama_index.core.node_parser import SentenceSplitter
 
-def build_or_load_index():
-    # Load documents
-    documents = SimpleDirectoryReader("data").load_data()
+def build_or_load_index(documents, index_path="index"):
+    embed_model = LangchainEmbedding(HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2"))
 
-    # Configure embedding model
-    embed_model = LangchainEmbedding(
-        HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-    )
-
-    # Set global settings
-    Settings.embed_model = embed_model
-    Settings.node_parser = SentenceSplitter(chunk_size=512, chunk_overlap=30)
-
-    # Build index
-    index = VectorStoreIndex.from_documents(documents)
+    if os.path.exists(index_path):
+        storage_context = StorageContext.from_defaults(persist_dir=index_path)
+        index = load_index_from_storage(storage_context, embed_model=embed_model)
+    else:
+        index = VectorStoreIndex.from_documents(documents, embed_model=embed_model)
+        index.storage_context.persist(persist_dir=index_path)
     return index
+    
