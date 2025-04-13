@@ -1,20 +1,24 @@
-import os
-from llama_index.core import VectorStoreIndex, StorageContext, load_index_from_storage
-from llama_index.core.node_parser import SimpleNodeParser
-from llama_index.core.text_splitter import SentenceSplitter
-from llama_index.core.schema import Document
+# rag_index.py
 
-PERSIST_DIR = "./storage"
+from langchain_huggingface import HuggingFaceEmbeddings
+from llama_index.embeddings.langchain import LangchainEmbedding
+from llama_index.core import Settings
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
+from llama_index.core.node_parser import SentenceSplitter
 
-def build_or_load_index(documents: List[Document]) -> VectorStoreIndex:
-    if os.path.exists(PERSIST_DIR):
-        print("[Info] Loading existing index...")
-        storage_context = StorageContext.from_defaults(persist_dir=PERSIST_DIR)
-        return load_index_from_storage(storage_context)
-    else:
-        print("[Info] Building new index...")
-        parser = SimpleNodeParser(text_splitter=SentenceSplitter(chunk_size=512))
-        nodes = parser.get_nodes_from_documents(documents)
-        index = VectorStoreIndex(nodes)
-        index.storage_context.persist(persist_dir=PERSIST_DIR)
-        return index
+def build_or_load_index():
+    # Load documents
+    documents = SimpleDirectoryReader("data").load_data()
+
+    # Configure embedding model
+    embed_model = LangchainEmbedding(
+        HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    )
+
+    # Set global settings
+    Settings.embed_model = embed_model
+    Settings.node_parser = SentenceSplitter(chunk_size=512, chunk_overlap=30)
+
+    # Build index
+    index = VectorStoreIndex.from_documents(documents)
+    return index
