@@ -9,6 +9,13 @@ from llama_index.core import (
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms.ollama import Ollama
 
+import sys
+
+if sys.platform.startswith("win"):
+    import types
+    sys.modules['resource'] = types.SimpleNamespace()
+
+
 def build_or_load_index(documents, index_path="index"):
     # Configure global settings using open-source components:
     Settings.llm = Ollama(model="llama3.1", request_timeout=120.0)
