@@ -9,13 +9,7 @@ A production-ready **Retrieval-Augmented Generation (RAG)** system that supports
 - 📁 Drag-and-drop **folder ingestion** (PDF, DOCX, PPTX)
 - 🔁 **Automatic re-indexing** on doc changes
 - 🧠 **LLaMA 3-based RAG** via Ollama
-- 🖼️ **OCR fallback** for scanned/image-based PDFs
-- 💬 **Query history** logging
-- 🧵 **Threaded context** support
-- ❌ **Hallucination minimization** via custom prompt
-- 🧹 **Verbose error logging**
 - 🌐 Web UI with **Streamlit**
-- 🔌 Optional **FastAPI** backend
 
 ---
 
