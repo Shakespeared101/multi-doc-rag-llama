@@ -3,6 +3,13 @@ from doc_loader import load_documents_from_streamlit
 from rag_index import build_or_load_index
 from query_engine import load_query_engine, query_index
 
+# Fix for 'resource' module on Windows
+try:
+    import resource
+except ImportError:
+    resource = None
+
+
 st.set_page_config(page_title="Multi-Doc RAG with LLaMA 3.1", layout="wide")
 st.title("📄 Multi-Document RAG with LLaMA 3.1")
 st.markdown("Upload documents and ask questions to retrieve context-aware answers.")

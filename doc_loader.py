@@ -15,6 +15,14 @@ from llama_index.readers.file import (
     ImageReader,
     IPYNBReader
 )
+
+import sys
+
+if sys.platform.startswith("win"):
+    import types
+    sys.modules['resource'] = types.SimpleNamespace()
+
+
 # Optional: Use a more robust PDF reader
 from llama_index.readers.file import PyMuPDFReader
 
