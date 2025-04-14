@@ -1,6 +1,6 @@
 # 🧠 Multi-Document RAG with LLaMA 3 (via Ollama)
 
-A production-ready **Retrieval-Augmented Generation (RAG)** system that supports multi-format document ingestion and generates highly contextual answers using **LlamaIndex**, **LangChain**, and **LLaMA 3** via **Ollama**.
+A production-ready **Retrieval-Augmented Generation (RAG)** system that supports multi-format document ingestion and generates highly contextual answers using **LlamaIndex**, and **LLaMA 3** via **Ollama**.
 
 ---
 
@@ -22,7 +22,6 @@ A production-ready **Retrieval-Augmented Generation (RAG)** system that supports
 ## 🧰 Tech Stack
 
 - [LlamaIndex](https://github.com/jerryjliu/llama_index)
-- [LangChain](https://github.com/langchain-ai/langchain)
 - [Ollama](https://ollama.com)
 - [Streamlit](https://streamlit.io)
 - [FastAPI](https://fastapi.tiangolo.com)
