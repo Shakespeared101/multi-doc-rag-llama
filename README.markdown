@@ -1,8 +1,8 @@
-🧠 multi-doc-rag-llama
+##**🧠 multi-doc-rag-llama**
 Knowledge-aware, multi-document Retrieval-Augmented Generation with Llama3 & LlamaIndex.
-A graph-driven approach to consolidate hierarchical topic structures across multiple sources—without duplication.
+A graph-driven approach to consolidate hierarchical topic structures across multiple sources—without duplication#.
 
-🔍 Overview
+#**🔍 Overview**
 multi-doc-rag-llama is a Retrieval-Augmented Generation (RAG) system built using open-source LLMs (e.g., Llama3), LlamaIndex, and a suite of supporting modules to:
 
 - Handle multiple documents across various formats (TXT, PDF, DOCX, etc.)
@@ -13,7 +13,7 @@ multi-doc-rag-llama is a Retrieval-Augmented Generation (RAG) system built using
 
 Think of it as ChatGPT meets Notion meets Knowledge Graph—on open weights.
 
-📁 Project Structure
+#**📁 Project Structure**
 ```bash
 multi-doc-rag-llama/
 │
@@ -30,8 +30,8 @@ multi-doc-rag-llama/
 └── .gitattributes          # LFS-tracked file config
 ```
 
-🧩 Core Concepts
-📚 Document Structure
+#**🧩 Core Concepts
+📚 Document Structure**
 Each document is parsed into a topic → subtopic tree structure.
 
 ```
@@ -49,7 +49,7 @@ Document B:
 - Topics can link across documents
 - Subtopics can be related to other topics or subtopics
 
-🌐 Knowledge Graph
+#**🌐 Knowledge Graph**
 The system builds a graph of trees, capturing:
 
 - Cross-document topic relationships
@@ -57,7 +57,7 @@ The system builds a graph of trees, capturing:
 - Nodes: Topics/Subtopics
 - Edges: Contextual & semantic relationships
 
-🧠 Query Goals
+#**🧠 Query Goals**
 When a user queries a topic:
 
 - All related content (topics + subtopics) is retrieved
@@ -65,8 +65,8 @@ When a user queries a topic:
 - No duplication: Repeated sections are merged intelligently
 - Tables, images, and other content are included if relevant
 
-🚀 Getting Started
-🔧 Installation
+**🚀 Getting Started
+🔧 Installation**
 ```bash
 git clone https://github.com/Shakespeared101/multi-doc-rag-llama.git
 cd multi-doc-rag-llama
@@ -77,17 +77,17 @@ pip install -r requirements.txt
 
 Optionally set up llama-cpp, HuggingFace Transformers, or LangChain backends depending on the LLM used.
 
-▶️ Run the App
+**▶️ Run the App**
 ```bash
 streamlit run app.py
 ```
 
-Or run via CLI:
+**Or run via CLI:**
 ```bash
 python main.py
 ```
 
-📦 Features
+#**📦 Features**
 - ✅ Multi-format document ingestion
 - ✅ Topic/subtopic parsing with hierarchy
 - ✅ Cross-doc linking & knowledge graph building
@@ -96,21 +96,21 @@ python main.py
 - ✅ Powered by Llama3 or compatible LLMs
 - ✅ Lightweight + fully open source
 
-🧠 Use Cases
+#**🧠 Use Cases**
 - Academic research consolidation
 - Enterprise knowledge systems
 - Legal document understanding
 - Smart FAQs / Helpdesk systems
 - Anything that needs structured + scalable multi-doc reasoning
 
-📸 Sample Output (Coming Soon)
+**📸 Sample Output (Coming Soon)**
 Visual examples of queries, knowledge graph snapshots, and RAG outputs.
 
-📜 License
+**📜 License**
 MIT License. Do what you want, but don’t blame us if your model hallucinates a recipe for plutonium.
 
-🤝 Contributing
+**🤝 Contributing**
 PRs welcome. If you're passionate about open knowledge, LLMs, and making machines actually useful—jump in!
 
-✉️ Contact
+**✉️ Contact**
 Made with chaos and caffeine by @Shakespeared101
