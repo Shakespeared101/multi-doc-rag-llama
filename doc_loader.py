@@ -22,12 +22,7 @@ if sys.platform.startswith("win"):
     import types
     sys.modules['resource'] = types.SimpleNamespace()
 
-
-# Optional: Use a more robust PDF reader
 from llama_index.readers.file import PyMuPDFReader
-
-from pathlib import Path
-from llama_index.core.schema import Document
 
 class TextReader:
     def load_data(self, file_path, **kwargs):
@@ -37,7 +32,7 @@ class TextReader:
 
 def load_documents(directory_path="docs"):
     """
-    Loads documents recursively from a directory.
+    Loads documents recursively from a directory, extracting multimedia where possible.
     """
     file_extractor = {
         ".pdf": PyMuPDFReader(),
@@ -52,7 +47,7 @@ def load_documents(directory_path="docs"):
         ".jpg": ImageReader(),
         ".jpeg": ImageReader(),
         ".ipynb": IPYNBReader(),
-        ".txt": TextReader()  # Added support for .txt
+        ".txt": TextReader()
     }
 
     reader = SimpleDirectoryReader(
@@ -61,17 +56,20 @@ def load_documents(directory_path="docs"):
         file_extractor=file_extractor
     )
     documents = reader.load_data()
+    for doc in documents:
+        if 'images' in doc.metadata:
+            doc.metadata['image'] = doc.metadata['images']
+        if 'tables' in doc.metadata:
+            doc.metadata['table'] = doc.metadata['tables']
     return documents
 
 def load_documents_from_streamlit(uploaded_files):
     """
-    Processes a list of uploaded files (from Streamlit) and returns Document objects.
-    Uses temporary files to interface with readers that expect file paths.
+    Processes uploaded files, extracting multimedia and returning Document objects.
     """
     documents = []
 
     file_extractor = {
-        # Use PyMuPDFReader() if default PDFReader is failing
         ".pdf": PyMuPDFReader(),
         ".docx": DocxReader(),
         ".pptx": PptxReader(),
@@ -95,15 +93,18 @@ def load_documents_from_streamlit(uploaded_files):
                     tmp_file.write(uploaded_file.read())
                     tmp_file.flush()
 
-                    # Try to load using the appropriate reader
                     docs = file_extractor[ext].load_data(file_path=tmp_file.name)
 
                     if not isinstance(docs, list):
                         raise TypeError(f"Expected a list of Document objects, got {type(docs)}")
 
-                    documents.extend(docs)
+                    for doc in docs:
+                        if 'images' in doc.metadata:
+                            doc.metadata['image'] = doc.metadata['images']
+                        if 'tables' in doc.metadata:
+                            doc.metadata['table'] = doc.metadata['tables']
+                        documents.append(doc)
 
-                # Clean up
                 os.unlink(tmp_file.name)
 
             except Exception as e:

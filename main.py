@@ -2,30 +2,41 @@ import os
 from doc_loader import load_documents
 from rag_index import build_or_load_index
 from query_engine import load_query_engine, query_index
+from knowledge_graph import KnowledgeGraph
 
 def main():
-    # Step 1: Load documents from the local 'docs' directory.
+    """
+    Main function to run the RAG system via command line with knowledge graph.
+    """
     print("[Info] Loading documents...")
     documents = load_documents("docs")
     print(f"[Info] Loaded {len(documents)} documents.")
 
-    # Step 2: Overwrite the index with the newly loaded documents.
     print("[Info] Building (overwriting) index with current documents...")
     index = build_or_load_index(documents, index_path="index")
+    print("[Info] Index persisted to 'index' directory")
 
-    # Step 3: Initialize the query engine using the new index.
+    print("[Info] Building knowledge graph...")
+    knowledge_graph = KnowledgeGraph(documents, index)
+    knowledge_graph.build_graph()
+    print("[Info] Knowledge graph constructed.")
+
     print("[Info] Initializing query engine...")
-    query_engine = load_query_engine("index")
+    query_engine = load_query_engine(index, knowledge_graph)
 
-    # Step 4: Interactive query loop.
-    print("\n[Info] RAG system is ready. Enter your queries (type 'exit' to quit):\n")
+    print("\n[Info] RAG system is ready. Enter a topic (type 'exit' to quit):\n")
     while True:
         user_query = input(">> ")
         if user_query.lower() in ["exit", "quit"]:
             print("[Info] Exiting the RAG system.")
             break
-        answer = query_index(query_engine, user_query)
-        print(f"\n[Response]\n{answer}\n")
+        response = query_index(query_engine, user_query)
+        print(f"\n[Response]\n{response['text']}")
+        if response['images']:
+            print("\n[Images Present] (Run Streamlit app to view)")
+        if response['tables']:
+            print("\n[Tables Present] (Run Streamlit app to view)")
+        print()
 
 if __name__ == "__main__":
     main()
